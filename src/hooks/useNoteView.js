@@ -1,10 +1,15 @@
+import { useEffect, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from './useForm';
-import { useRef } from 'react';
-import { useEffect } from 'react';
-import { setActiveNote, startDeletingNote, startSavingNote, startUploadingFiles } from '../store/journal';
 import Swal from 'sweetalert2';
-import { useMemo } from 'react';
+
+import { useForm } from './useForm';
+import { setActiveNote, setActiveNoteNull, startDeletingNote, startSavingNote, startUploadingFiles } from '../store/journal';
+import { useState } from 'react';
+
+const validationsForm = {
+   body: [ (value) =>  value.length >= 5, 'The body must be at least 5 characters long' ],
+   title: [ (value) => value.length >= 5, 'The title must be at least 5 characters long' ],
+};
 
 export const useNoteView = () => {
   
@@ -12,10 +17,15 @@ export const useNoteView = () => {
 
    const { activeNote, savedMessage, isSaving } = useSelector( state => state.journal );
   
-   const { body, title, date, onChangeInput, formState } = useForm( activeNote );
+   const { 
+      body, title, date, onChangeInput, formState,
+      isFormValid, titleValid, bodyValid 
+   } = useForm( activeNote, validationsForm );
 
    const fileInputRef = useRef();
 
+   const [formSubmitted, setFormSubmitted] = useState(false);
+   
    useEffect(() => {
       dispatch( setActiveNote( formState ) );
    }, [ formState ]);
@@ -23,6 +33,11 @@ export const useNoteView = () => {
    useEffect(() => {
       if (savedMessage.length > 0) {
          Swal.fire('Note updated', savedMessage, 'success');
+
+         setTimeout( () => {
+            dispatch( setActiveNoteNull() );
+            Swal.close();
+         }, 2000);
       }
    }, [ savedMessage ]);
   
@@ -33,6 +48,9 @@ export const useNoteView = () => {
    }, [date]);
   
    const onSaveNote = () => {
+      setFormSubmitted(true);
+      if ( !isFormValid ) return;
+
       dispatch( startSavingNote() );
    };
 
@@ -48,7 +66,8 @@ export const useNoteView = () => {
    return {
       onDelete, onFileInputChange, onSaveNote,
       dateString, fileInputRef,
-      body, title, date, onChangeInput, formState,
+      body, title, date, onChangeInput, formState, isFormValid, titleValid, bodyValid,
+      formSubmitted,
       activeNote, savedMessage, isSaving
    };
 };

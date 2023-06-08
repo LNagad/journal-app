@@ -9,8 +9,8 @@ export const NoteView = () => {
    const {
       onDelete, onFileInputChange, onSaveNote,
       dateString, fileInputRef,
-      body, title, onChangeInput,
-      activeNote, isSaving
+      body, title, onChangeInput, isFormValid, titleValid, bodyValid,
+      activeNote, isSaving, formSubmitted,
    } = useNoteView();
 
    return (
@@ -32,6 +32,7 @@ export const NoteView = () => {
                ref={ fileInputRef }
                onChange={ onFileInputChange }
                style={{ display: 'none' }}
+               disabled={ isSaving || !isFormValid }
             />
 
             <IconButton
@@ -44,7 +45,7 @@ export const NoteView = () => {
 
             <Button 
                onClick={ onSaveNote }
-               disabled={ isSaving }
+               disabled={ formSubmitted && (isSaving || !isFormValid) }
                color='primary' 
                sx={{ p: 2 }}>
                <SaveOutlined sx={{ fontSize: 30, mr: 1}} /> 
@@ -63,6 +64,8 @@ export const NoteView = () => {
                value={ title }
                onChange={ onChangeInput }
                sx={{ border: 'none', mb: 1}}
+               error={ formSubmitted && titleValid }
+               helperText={ formSubmitted && titleValid }
             />
 
             <TextField
@@ -72,9 +75,12 @@ export const NoteView = () => {
                multiline
                placeholder='What happened today?' 
                minRows={ 5 }
+               label='Body' 
                name='body'
                value={ body }
                onChange={ onChangeInput }
+               error={ formSubmitted && bodyValid }
+               helperText={ formSubmitted && bodyValid }
             />
          </Grid>
 
