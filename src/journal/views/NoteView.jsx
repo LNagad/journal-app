@@ -3,6 +3,7 @@ import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { ImageGallery } from '../components';
 
 import { useNoteView } from '../../hooks';
+import { useSelector } from 'react-redux';
 
 
 export const NoteView = () => {
@@ -12,6 +13,8 @@ export const NoteView = () => {
       body, title, onChangeInput, isFormValid, titleValid, bodyValid,
       activeNote, isSaving, formSubmitted,
    } = useNoteView();
+
+   const { noteActive } = useSelector( state => state.journal);
 
    return (
       <Grid container
@@ -36,8 +39,8 @@ export const NoteView = () => {
             />
 
             <IconButton
+               disabled={ isSaving || !isFormValid }
                color='primary'
-               disabled={ isSaving }
                onClick={ () => fileInputRef.current.click() }
             >
                <UploadOutlined />
@@ -87,6 +90,7 @@ export const NoteView = () => {
          <Grid>
             <Button
                onClick={ onDelete }
+               disabled={ !activeNote.id  }
                sx={{ mt: 2 }}
                color='error'
             >
