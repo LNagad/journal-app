@@ -4,7 +4,7 @@ import { Grid, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveNote } from '../../store/journal';
+import { setActiveNote, togleSideBar } from '../../store/journal';
 
 export const SideBarListItem = ( { note } ) => {
    
@@ -25,8 +25,9 @@ export const SideBarListItem = ( { note } ) => {
    const dispatch = useDispatch();
 
    const onClickNote = () => {
-      console.log(note);
       dispatch( setActiveNote( note ) );
+      dispatch( togleSideBar() );
+
    };
 
    return (
