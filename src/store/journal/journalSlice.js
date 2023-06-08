@@ -6,7 +6,8 @@ export const journalSlice = createSlice({
       isSaving: false,
       savedMessage: '',
       notes: [],
-      activeNote: null
+      activeNote: null,
+      isSideBarOpen: false
       // activeNote: {
       //    id: '123',
       //    title: '',
@@ -16,6 +17,9 @@ export const journalSlice = createSlice({
       // }
    },
    reducers: {
+      togleSideBar: (state) => {
+         state.isSideBarOpen = !state.isSideBarOpen;
+      },
       savingNewNote: ( state ) => {
          state.isSaving = true;
       },
@@ -60,6 +64,7 @@ export const journalSlice = createSlice({
          state.savedMessage = '';
          state.notes = [];
          state.activeNote = null;
+         state.isSideBarOpen = false;
       },
       deleteNoteById: ( state, {payload} ) => {
          state.notes = state.notes.filter( note => note.id !== payload);
@@ -74,10 +79,11 @@ export const {
    deleteNoteById,
    savingNewNote,
    setActiveNote,
+   setActiveNoteNull,
    setNotes,
    setPhotosToActiveNote,
    setSaving,
+   togleSideBar,
    updateNote,
-   setActiveNoteNull
 } = journalSlice.actions;
 

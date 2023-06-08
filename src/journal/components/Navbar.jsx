@@ -4,6 +4,7 @@ import { AppBar, Grid, IconButton, Toolbar, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { startLogout } from '../../store/auth';
+import { togleSideBar } from '../../store/journal';
 
 export const Navbar = ({ drawerWidth }) => {
    const dispach = useDispatch();
@@ -12,6 +13,9 @@ export const Navbar = ({ drawerWidth }) => {
       dispach( startLogout() );
    };
 
+   const onSideBarTogle = () => {
+      dispach( togleSideBar() );
+   };
    return (
       <AppBar 
          position="fixed"
@@ -22,6 +26,7 @@ export const Navbar = ({ drawerWidth }) => {
       >
          <Toolbar>
             <IconButton
+               onClick={ onSideBarTogle }
                color='inherit'
                edge='start'
                sx={{ mr: 2, display: { sm: 'none'}}}

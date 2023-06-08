@@ -1,20 +1,31 @@
-import { Box, Divider, Drawer, List, Toolbar, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Box, Divider, Drawer, IconButton, List, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import { SideBarListItem } from './SideBarListItem';
+import { togleSideBar } from '../../store/journal';
 
 export const SideBar = ({ drawerWidth = 240}) => {
 
+   const dispach = useDispatch();
+   const theme = useTheme();
+   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
    const { displayName } = useSelector( state => state.auth);
-   const { notes } = useSelector( state => state.journal);
+   const { notes, isSideBarOpen } = useSelector( state => state.journal);
    
+
+   const togleDrawer = () => {
+      dispach( togleSideBar() );
+   };
+
    return (
       <Box
          component={'nav'}
          sx={{ width: { sm: drawerWidth}, flexShrink: { sm: 0 } }}
       >
          <Drawer
-            variant='permanent'
-            open
+            variant={isMobile ? 'temporary' : 'permanent'}
+            open={isSideBarOpen}
+            onClose={ togleDrawer }
             sx={{ 
                display: { xs: 'block'}, 
                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth}
