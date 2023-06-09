@@ -1,6 +1,7 @@
 
 export const fileUpload = async( file ) => {
-   if ( !file ) throw new Error('File has not been sent');
+   // if ( !file ) throw new Error('File has not been sent');
+   if ( !file ) return null;
 
    const cloudURL = 'https://api.cloudinary.com/v1_1/lnagad/upload';
   
@@ -22,7 +23,8 @@ export const fileUpload = async( file ) => {
       return clouldResp.secure_url;
 
    } catch (error) {
-      console.log(error);
-      throw new Error(error.message);
+      // console.log(error);
+      // throw new Error(error.message);
+      return null;
    }
 };
