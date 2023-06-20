@@ -6,7 +6,7 @@ export const loadNotes = async( uid = '') => {
   
    if ( !uid ) return new Error('The user UID was not found');
 
-   const collectionRef = collection(FirebaseDB, `${uid}/journal/notes`);
+   const collectionRef = collection(FirebaseDB, `journal/${uid}/notes`);
    const docsRef = await getDocs( collectionRef );
    
    const notes = [];

@@ -6,13 +6,22 @@ import { getFirestore } from 'firebase/firestore/lite';
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+const { 
+   VITE_APIKEY,
+   VITE_AUTHDOMAIN,
+   VITE_PROJECTID,
+   VITE_STORAGEBUCKET,
+   VITE_MESSAGINGSENDERID,
+   VITE_APPID,
+} = import.meta.env;
+
 const firebaseConfig = {
-   apiKey: 'AIzaSyAw3O8dUxooJWBjoHawItgfTRCaQumo48E',
-   authDomain: 'react-cursos-2423c.firebaseapp.com',
-   projectId: 'react-cursos-2423c',
-   storageBucket: 'react-cursos-2423c.appspot.com',
-   messagingSenderId: '951772337525',
-   appId: '1:951772337525:web:e640990d7241d03cd6af3c'
+   apiKey: VITE_APIKEY,
+   authDomain: VITE_AUTHDOMAIN,
+   projectId: VITE_PROJECTID,
+   storageBucket: VITE_STORAGEBUCKET,
+   messagingSenderId: VITE_MESSAGINGSENDERID,
+   appId: VITE_APPID,
 };
 
 // Initialize Firebase

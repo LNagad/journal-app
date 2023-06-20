@@ -34,7 +34,7 @@ export const LoginPage = () => {
    const dispatch = useDispatch();
 
    const { status, errorMessage } = useSelector((state) => state.auth);
-
+   
    const {
       setFormSubmitted,
       formSubmitted,
@@ -106,7 +106,7 @@ export const LoginPage = () => {
                </Grid>
 
                <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
-                  {formSubmitted && errorMessage != null && (
+                  {errorMessage != null &&  (
                      <Grid item xs={12}>
                         <Alert severity="error">{errorMessage}</Alert>
                      </Grid>

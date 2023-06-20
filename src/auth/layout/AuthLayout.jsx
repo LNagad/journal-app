@@ -23,7 +23,7 @@ export const AuthLayout = ({ children, title = '' }) => {
             }}
          >
             <Typography variant='h5'>{ title }</Typography>
-
+            
             { children }
 
          </Grid>

@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
+import { collection, deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { addNewEmptyNote, deleteNoteById, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from './';
 import { fileUpload, loadNotes } from '../../helpers';
@@ -17,7 +17,7 @@ export const startNewNote = () => {
          imageUrls: []
       };
 
-      // const newDoc = doc( collection( FirebaseDB, `${uid}/journal/notes` ) );
+      // const newDoc = doc( collection( FirebaseDB, `journal/${uid}/notes` ) );
       // await setDoc( newDoc, newNote );
 
       // newNote.id = newDoc.id;
@@ -42,11 +42,11 @@ export const startSavingNote = () => {
 
       if (!activeNote.id)  {
          
-         const newDoc = doc( collection( FirebaseDB, `${uid}/journal/notes` ) );
-         await setDoc( newDoc, activeNote );
+         const newDoc = doc( collection( FirebaseDB, `journal/${uid}/notes` ) );
+         await setDoc( newDoc, activeNote, { merge: true }   );
          newNote.id = newDoc.id;
 
-         const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${newNote.id}`);
+         const docRef = doc( FirebaseDB, `journal/${uid}/notes/${newNote.id}`);
          await setDoc( docRef, newNote, { merge: true } );
 
       } else {
@@ -54,7 +54,7 @@ export const startSavingNote = () => {
          const noteToFireStore = { ...newNote };
          delete noteToFireStore.id;
 
-         const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${newNote.id}`);
+         const docRef = doc( FirebaseDB, `journal/${uid}/notes/${newNote.id}`);
          await setDoc( docRef, noteToFireStore, { merge: true } );
 
       }
@@ -73,7 +73,7 @@ export const startLoadingNotes = () => {
       
       const notes = await loadNotes( uid );
 
-      if ( notes  <= 0 ) return new Error('Notes not found');
+      if ( notes  <= 0 ) return null;
 
       dispatch( setNotes(notes) );
    };
@@ -102,9 +102,23 @@ export const startDeletingNote = () => {
       const { uid } = getState().auth;
       const { activeNote } = getState().journal;
 
-      const docRef = doc( FirebaseDB, `${uid}/journal/notes/${activeNote.id}`);
-      await deleteDoc(docRef);
+      const docRef = doc( FirebaseDB, `journal/${uid}/notes/${activeNote.id}`);
 
-      dispatch( deleteNoteById(activeNote.id) );
+      const docSnapshot = await getDoc(docRef);
+
+      if (docSnapshot.exists()) {
+         // El documento existe, se puede eliminar
+         try {
+            await deleteDoc(docRef);
+            dispatch(deleteNoteById(activeNote.id));
+            return { ok: true };
+         } catch (error) {
+            console.error(error);
+            return { ok: false };
+         }
+      } else {
+         // El documento no existe, no se puede eliminar
+         return { ok: false };
+      }
    };
 };

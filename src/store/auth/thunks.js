@@ -3,7 +3,6 @@ import { clearNotesLogout } from '../journal/journalSlice';
 import { checkingCredentials, login, logout, resetErroMessage } from './';
 
 export const checkingAuthentication = () => {
-  
    return async( dispatch ) => {
       dispatch( checkingCredentials() );
    };
@@ -16,22 +15,19 @@ export const resetErrorMessages = () => {
 };
 
 export const startGoogleSignIn = () => {
-   
    return async( dispatch ) => {
       dispatch( checkingCredentials() );
 
       const result = await signInWithGoogle();
-
+      
       if ( !result.ok ) return dispatch( logout( result ) );
       // delete result.ok;
       // console.log(result);
       dispatch( login( result ) );
    };
-   
 };
 
 export const startSignInWithEmailPassword = ({ email, password}) => {
-   
    return async( dispatch ) => {
       dispatch( checkingCredentials() );
 
@@ -42,12 +38,10 @@ export const startSignInWithEmailPassword = ({ email, password}) => {
       // console.log(result);
       dispatch( login( result ) );
    };
-   
 };
 
 
 export const startCreatingUserWithEmailPassword = ({ email, password, displayName}) => {
-
    return async( dispatch ) => {
       dispatch( checkingCredentials() );
 
